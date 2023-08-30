@@ -1,23 +1,27 @@
-# Apache2_Modsecurity
-Apache2 Modsecurity:
+<h1 align="center">Apache2_Modsecurity :rocket:</h1>
 
+### Apache2 Modsecurity:
+
+```
 sudo apt install libapache2-mod-security2 -y
 sudo a2enmod headers
 sudo systemctl restart apache2
+```
 
-
-#Configuring ModSecurity:
-
+#### Configuring ModSecurity:
+```
 sudo cp /etc/modsecurity/modsecurity.conf-recommended /etc/modsecurity/modsecurity.conf
+```
 
-#File: /etc/modsecurity/modsecurity.conf
+File: 
+> /etc/modsecurity/modsecurity.conf
 
-# -- Rule engine initialization ----------------------------------------------
 
-# Enable ModSecurity, attaching it to every transaction. Use detection
-# only to start with, because that minimises the chances of post-installation
-# disruption.
-#
+###  Rule engine initialization 
+
+##### Enable ModSecurity, attaching it to every transaction. Use detectiononly to start with, because that minimises the chances of post-installation disruption.
+
+
 SecRuleEngine On
 ...
 
