@@ -22,34 +22,43 @@ File:
 ##### Enable ModSecurity, attaching it to every transaction. Use detectiononly to start with, because that minimises the chances of post-installation disruption.
 
 
-SecRuleEngine On
-...
+### SecRuleEngine On
 
+```
 sudo systemctl restart apache2
+```
 
+#### Setting Up the OWASP ModSecurity Core Rule Set
 
-#Setting Up the OWASP ModSecurity Core Rule Set
-
-
+```
 sudo rm -rf /usr/share/modsecurity-crs
+```
+```
 sudo apt install git
+```
 
-#Clone the OWASP-CRS GitHub repository into the /usr/share/modsecurity-crs directory:
+##### Clone the OWASP-CRS GitHub repository into the /usr/share/modsecurity-crs directory:
+```
 sudo git clone https://github.com/coreruleset/coreruleset /usr/share/modsecurity-crs
-
-#Rename the crs-setup.conf.example to crs-setup.conf:
+```
+##### Rename the crs-setup.conf.example to crs-setup.conf:
+```
 sudo mv /usr/share/modsecurity-crs/crs-setup.conf.example /usr/share/modsecurity-crs/crs-setup.conf
+```
 
-#Rename the default request exclusion rule file:
+##### Rename the default request exclusion rule file:
+```
 sudo mv /usr/share/modsecurity-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf.example /usr/share/modsecurity-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+```
 
 
 
+#### Enabling ModSecurity in Apache 2
 
-#Enabling ModSecurity in Apache 2
+##### Using a text editor such as vim, edit the /etc/apache2/mods-available/security2.conf file to include the OWASP-CRS files you have downloaded:
+> /etc/apache2/mods-available/security2.conf
 
-#Using a text editor such as vim, edit the /etc/apache2/mods-available/security2.conf file to include the OWASP-CRS files you have downloaded:
-/etc/apache2/mods-available/security2.conf
+```
 
 <IfModule security2_module>
         SecDataDir /var/cache/modsecurity
@@ -57,10 +66,12 @@ sudo mv /usr/share/modsecurity-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.
         Include /usr/share/modsecurity-crs/rules/*.conf
 </IfModule>
 
+```
 
 
-#In /etc/apache2/sites-enabled/000-default.conf file VirtualHost block, include the SecRuleEngine directive set to On.
+##### In /etc/apache2/sites-enabled/000-default.conf file VirtualHost block, include the SecRuleEngine directive set to On.
 
+```
 <VirtualHost *:80>
         ServerAdmin webmaster@localhost
         DocumentRoot /var/www/html
@@ -70,19 +81,21 @@ sudo mv /usr/share/modsecurity-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.
 
         SecRuleEngine On
 </VirtualHost>
+```
 
 
+* Restart the apache2 service to apply the configuration:
 
-#Restart the apache2 service to apply the configuration:
-
-sudo systemctl restart apache2
+* sudo systemctl restart apache2
 
 
-#Testing ModSecurity
-
+* Testing ModSecurity
+```
 curl http://<SERVER-IP/DOMAIN>/index.php?exec=/bin/bash
+```
 
-#If ModSecurity has been configured correctly and is actively blocking attacks, the following error is returned:
+* If ModSecurity has been configured correctly and is actively blocking attacks, the following error is returned:
+
 
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html><head>
